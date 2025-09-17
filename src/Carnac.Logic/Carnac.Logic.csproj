@@ -143,6 +143,15 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <!-- Mouse hook support -->
+    <Compile Include="KeyMonitor\InterceptMouse.cs" />
+    <Compile Include="KeyMonitor\MouseEventArgs.cs" />
+    <Compile Include="KeyMonitor\LowLevelMouseProc.cs" />
+    <Compile Include="Native\MSLLHOOKSTRUCT.cs" />
+    <Compile Include="Native\MOUSEHOOKSTRUCT.cs" />
+    <Compile Include="Native\MOUSEEVENTF.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.29.4\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -158,4 +167,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+
 </Project>
