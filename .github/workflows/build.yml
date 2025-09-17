@@ -13,19 +13,26 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      - name: Restore NuGet packages
-        run: .\src\.nuget\NuGet.exe restore .\src\Carnac.sln
+      # ✅ 최신 NuGet 설치 (리포 내 구버전 사용 금지)
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
 
+      # ✅ 최신 NuGet으로 복원 (MSBuild 17 명시)
+      - name: Restore packages
+        run: nuget restore .\src\Carnac.sln -NonInteractive -MSBuildVersion 17.0
+
+      # MSBuild 경로 설정
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      # 빌드 (Release)
       - name: Build (Release)
         run: msbuild .\src\Carnac.sln /m /p:Configuration=Release
 
+      # 결과물 업로드
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Carnac-Release
           path: |
-            src\Carnac\bin\Release\**\Carnac.exe
-            src\Carnac\bin\Release\**
+            src\Carnac\bin\Release\**\*
