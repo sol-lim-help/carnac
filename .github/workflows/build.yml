@@ -1,4 +1,4 @@
-name: Build Carnac (with Mouse Support)
+name: Build Carnac (No xN)
 
 on:
   workflow_dispatch:
@@ -8,32 +8,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Check out
+        uses: actions/checkout@v4
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.2.0
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
 
-    - name: Restore NuGet packages
-      run: nuget restore src/Carnac.sln
+      - name: Restore packages
+        run: nuget restore .\src\Carnac.sln -NonInteractive
 
-    - name: Build Carnac.csproj (Release)
-      run: msbuild src/Carnac/Carnac.csproj /m /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /p:TargetFrameworkProfile=
+      - name: Build (Release)
+        run: msbuild .\src\Carnac.sln /m /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /p:TargetFrameworkProfile=
 
-    - name: Collect Artifacts
-      run: |
-        mkdir output
-        copy src\Carnac\bin\Release\Carnac.exe output\
-        copy src\Carnac\bin\Release\Carnac.exe.config output\
-        copy src\Carnac\bin\Release\Carnac.pdb output\
-        xcopy src\Carnac.Logic\bin\Release\Keymaps output\Keymaps /E /I /Y
-      shell: cmd
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: Carnac-Release
-        path: output
+      # ❗아티팩트는 Carnac 실행파일만 업로드 (KeyStreamCapture 산출물 제외)
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Carnac-Release
+          path: |
+            src\Carnac\bin\Release\Carnac.exe
+            src\Carnac\bin\Release\Carnac.exe.config
+            src\Carnac\bin\Release\Carnac.pdb
+            src\Carnac\bin\Release\Keymaps\
+          if-no-files-found: error
+          retention-days: 14
