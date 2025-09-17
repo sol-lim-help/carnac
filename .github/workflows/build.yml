@@ -1,4 +1,4 @@
-name: Build Carnac (No xN + Mouse)
+name: Build Carnac (with Mouse Support)
 
 on:
   workflow_dispatch:
@@ -8,28 +8,32 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Check out
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
 
-      # packages.config 기반(구형) 패키지 복원(Fody 등)
-      - name: NuGet Restore
-        run: nuget restore .\src\Carnac.sln -NonInteractive
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.2.0
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+    - name: Restore NuGet packages
+      run: nuget restore src/Carnac.sln
 
-      # 솔루션 전체(모든 프로젝트) Release + .NET 4.8로 빌드
-      - name: Build solution (Release)
-        run: msbuild .\src\Carnac.sln /m /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /p:TargetFrameworkProfile=
+    - name: Build Carnac.csproj (Release)
+      run: msbuild src/Carnac/Carnac.csproj /m /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /p:TargetFrameworkProfile=
 
-      # 🔽 아티팩트에 두 프로젝트의 산출물을 모두 포함 (중요!)
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Carnac-Release
-          path: |
-            src\Carnac\bin\Release\**\*
-            src\KeyStreamCapture\bin\Release\**\*
+    - name: Collect Artifacts
+      run: |
+        mkdir output
+        copy src\Carnac\bin\Release\Carnac.exe output\
+        copy src\Carnac\bin\Release\Carnac.exe.config output\
+        copy src\Carnac\bin\Release\Carnac.pdb output\
+        xcopy src\Carnac.Logic\bin\Release\Keymaps output\Keymaps /E /I /Y
+      shell: cmd
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Carnac-Release
+        path: output
