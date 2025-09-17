@@ -14,7 +14,6 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      # ✅ MSBuild가 패키지 복원까지 수행
       - name: Restore
         run: msbuild .\src\Carnac.sln /t:Restore /m
 
@@ -26,4 +25,5 @@ jobs:
         with:
           name: Carnac-Release
           path: src\Carnac\bin\Release\**\*
+
 
