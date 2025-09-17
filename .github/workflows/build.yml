@@ -1,0 +1,31 @@
+name: Build Carnac (No xN)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+- name: Restore
+  run: msbuild .\src\Carnac.sln /t:Restore /m ^
+       /p:TargetFrameworkVersion=v4.8 ^
+       /p:TargetFrameworkProfile=
+
+- name: Build (Release)
+  run: msbuild .\src\Carnac.sln /t:Build /m /p:Configuration=Release ^
+       /p:TargetFrameworkVersion=v4.8 ^
+       /p:TargetFrameworkProfile=
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Carnac-Release
+          path: src\Carnac\bin\Release\**\*
