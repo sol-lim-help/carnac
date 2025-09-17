@@ -195,8 +195,7 @@ namespace Carnac.Logic.Models
                 {
                     yield return textPart;
                 }
-                if (repeatCount > 1)
-                    yield return string.Format(" x {0} ", repeatCount);
+                
             }
         }
 
