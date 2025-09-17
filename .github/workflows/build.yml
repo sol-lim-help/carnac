@@ -14,18 +14,16 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
-
-      # ✅ MSBuild 경로로 복원 (버전 숫자 대신 경로 사용)
-      - name: Restore packages
-        run: nuget restore .\src\Carnac.sln -NonInteractive -MSBuildPath $env:MSBUILD_PATH
+      # ✅ MSBuild가 패키지 복원까지 수행
+      - name: Restore
+        run: msbuild .\src\Carnac.sln /t:Restore /m
 
       - name: Build (Release)
-        run: msbuild .\src\Carnac.sln /m /p:Configuration=Release
+        run: msbuild .\src\Carnac.sln /t:Build /m /p:Configuration=Release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Carnac-Release
           path: src\Carnac\bin\Release\**\*
+
