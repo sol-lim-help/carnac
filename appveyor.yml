@@ -4,17 +4,13 @@ skip_branch_with_pr: true
 skip_tags: false
 assembly_info:
   patch: false
-branches:
-  only:
-    - master
-    - \d*\.\d*\.\d*/
 environment:
   Version: $(APPVEYOR_BUILD_VERSION)
   GithubRepo: $(APPVEYOR_REPO_NAME)
   GithubAuthToken:
-    secure: qgh2y38nOEG/eAnQe0EwNSqMDSXf9akPDwJI5Yasvyiemh5GBbbzkDIleAhGak6i
+    secure: wzcaj3QeW13CSo26Gshrzwzk9ftvfgqalsqEppaIESO5M2/HcqxVhIi21NHoIBui
 build_script:
-- ps: .\build.ps1 -Configuration Release -Experimental
+- cmd: PowerShell -Version 2.0 .\build.ps1 -Configuration Release -Experimental -ScriptArgs '--authtoken="%GithubAuthToken%"'
 test:
   assemblies:
     - '**\Carnac.Tests.dll'
@@ -30,7 +26,7 @@ artifacts:
 deploy:
 - provider: GitHub
   auth_token:
-    secure: qgh2y38nOEG/eAnQe0EwNSqMDSXf9akPDwJI5Yasvyiemh5GBbbzkDIleAhGak6i
+    secure: wzcaj3QeW13CSo26Gshrzwzk9ftvfgqalsqEppaIESO5M2/HcqxVhIi21NHoIBui
   artifact: ZipPackage
   draft: false
   on:
@@ -38,7 +34,7 @@ deploy:
     APPVEYOR_REPO_TAG: true
 - provider: GitHub
   auth_token:
-    secure: qgh2y38nOEG/eAnQe0EwNSqMDSXf9akPDwJI5Yasvyiemh5GBbbzkDIleAhGak6i
+    secure: wzcaj3QeW13CSo26Gshrzwzk9ftvfgqalsqEppaIESO5M2/HcqxVhIi21NHoIBui
   artifact: SquirrelPackage
   draft: false
   on:
@@ -46,7 +42,7 @@ deploy:
     APPVEYOR_REPO_TAG: true
 - provider: GitHub
   auth_token:
-    secure: qgh2y38nOEG/eAnQe0EwNSqMDSXf9akPDwJI5Yasvyiemh5GBbbzkDIleAhGak6i
+    secure: wzcaj3QeW13CSo26Gshrzwzk9ftvfgqalsqEppaIESO5M2/HcqxVhIi21NHoIBui
   artifact: Checksums
   draft: false
   on:

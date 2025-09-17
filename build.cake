@@ -1,16 +1,16 @@
 #tool "nuget:?package=xunit.runners&version=1.9.2";
-#tool "nuget:?package=Squirrel.Windows&version=1.9.1";
-#tool "nuget:?package=GitVersion.CommandLine&version=5.3.6";
+#tool "nuget:?package=Squirrel.Windows";
+#tool "nuget:?package=GitVersion.CommandLine";
 
-#addin "nuget:?package=Cake.FileHelpers&version=3.2.1";
-#addin "nuget:?package=Cake.Squirrel&version=0.15.1";
-#addin "nuget:?package=Newtonsoft.Json&version=12.0.3";
+#addin "nuget:?package=Cake.FileHelpers&version=1.0.4";
+#addin "nuget:?package=Cake.Squirrel&version=0.12.0";
+#addin "nuget:?package=Newtonsoft.Json";
 using Newtonsoft.Json;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var githubRepo = Argument("githubrepo", "Code52/carnac");
-var githubAuthToken = Argument("GithubAuthToken", "");
+var githubAuthToken = Argument("authtoken", "");
 
 var githubRepoUrl = $"https://github.com/{githubRepo}";
 var solutionFile = "./src/Carnac.sln";
@@ -80,7 +80,7 @@ Task("Package-Squirrel")
 	.IsDependentOn("Run-Unit-Tests")
 	.Does(() =>
 	{
-		var syncReleasesDir = toolsDir + Directory("squirrel.windows.1.9.1/tools");
+		var syncReleasesDir = toolsDir + Directory("squirrel.windows/tools");
 
 		EnsureDirectoryExists(deployDir);
 		EnsureDirectoryExists(squirrelDeployDir);
