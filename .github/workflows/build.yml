@@ -1,23 +1,35 @@
-name: Build Carnac (No xN)
+name: Build Carnac (No xN + Mouse)
+
 on:
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
       - name: Check out
         uses: actions/checkout@v4
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
+
+      # packages.config 기반(구형) 패키지 복원(Fody 등)
       - name: NuGet Restore
         run: nuget restore .\src\Carnac.sln -NonInteractive
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
-      - name: Build (Release)
-        run: msbuild .\src\Carnac.sln /t:Build /m /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /p:TargetFrameworkProfile=
+
+      # 솔루션 전체(모든 프로젝트) Release + .NET 4.8로 빌드
+      - name: Build solution (Release)
+        run: msbuild .\src\Carnac.sln /m /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /p:TargetFrameworkProfile=
+
+      # 🔽 아티팩트에 두 프로젝트의 산출물을 모두 포함 (중요!)
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Carnac-Release
-          path: src\Carnac\bin\Release\**\*
-
+          path: |
+            src\Carnac\bin\Release\**\*
+            src\KeyStreamCapture\bin\Release\**\*
