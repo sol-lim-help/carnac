@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- 모든 하위 .csproj에 공통으로 적용됨 -->
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+  </PropertyGroup>
+</Project>
