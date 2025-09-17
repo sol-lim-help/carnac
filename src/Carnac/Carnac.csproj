@@ -238,12 +238,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KeyStreamCapture\KeyStreamCapture.csproj">
-      <Project>{D05595B0-C802-4986-9837-425EC505C192}</Project>
-      <Name>KeyStreamCapture</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -274,3 +268,4 @@
   </Target>
 
 </Project>
+
